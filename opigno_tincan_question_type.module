@@ -2,12 +2,10 @@
 
 /**
  * @file
+ *
  * The main module file which contains the main drupal hooks.
  * You can find the todolist as well in this file.
  */
-
-
-
 
 
 /**
@@ -32,9 +30,6 @@ function opigno_tincan_question_type_quiz_question_info() {
 function opigno_tincan_question_type_config() {
   return FALSE;
 }
-
-
-
 
 
 /**
