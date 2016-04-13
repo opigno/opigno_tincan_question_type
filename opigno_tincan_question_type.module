@@ -1,0 +1,28 @@
+<?php
+
+
+/**
+ * Implementation of hook_quiz_question_info().
+ */
+function opigno_tincan_question_type_quiz_question_info()
+{
+  return array(
+    'opigno_tincan_question_type' => array(
+      'name' => t('TinCan Package'),
+      'description' => t('Quiz questions that allow a user to answer to a TinCan package.'),
+      'question provider' => 'OpignoTincanQuestion',
+      'response provider' => 'OpignoTincanResponse',
+      'module' => 'quiz_question',
+    ),
+  );
+}
+
+/**
+ * Implements hook_config().
+ */
+function opigno_tincan_question_type_config() {
+    return false;
+}
+
+
+// TODO: Add a checkbox saying "no score". If it is checked, it would say that this package send no score to the LRS (always success).

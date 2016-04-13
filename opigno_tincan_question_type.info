@@ -1,0 +1,12 @@
+name = Opigno Tincan Question Type
+description = Add the Tincan Question type for quiz. Teachers would be able to upload tincan packages to create questions,
+package = Opigno
+core = 7.x
+
+dependencies[] = opigno_tincan_api
+dependencies[] = quiz
+dependencies[] = quiz_question
+
+files[] = includes/opigno_tincan_question_type.databases.inc
+files[] = includes/opigno_tincan_question_type.question.inc
+files[] = includes/opigno_tincan_question_type.response.inc

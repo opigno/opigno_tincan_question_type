@@ -1,0 +1,29 @@
+<?php
+
+module_load_include('inc', 'opigno_tincan_question_type', 'includes/opigno_tincan_question_type.databases');
+
+
+function opigno_tincan_question_type_install()
+{
+  quiz_question_add_body_field('opigno_tincan_question_type');
+  variable_set('node_options_opigno_tincan_question_type', array('status'));
+  cache_clear_all('autoload:', 'cache');
+}
+
+
+
+/**
+ * Implements hook_schema().
+ */
+function opigno_tincan_question_type_schema() {
+  return array(
+    OpignoTincanQuestionTypePropertiesDatabase::dbName => array(
+      'fields' => OpignoTincanQuestionTypePropertiesDatabase::fields,
+      'indexes' => OpignoTincanQuestionTypePropertiesDatabase::indexes
+    ),
+    OpignoTincanQuestionTypeAnswersDatabase::dbName => array(
+      'fields' => OpignoTincanQuestionTypeAnswersDatabase::fields,
+      'indexes' => OpignoTincanQuestionTypeAnswersDatabase::indexes
+    )
+  );
+}
