@@ -221,7 +221,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
    * @return array
    *   Must return a FAPI array.
    */
-  public function getAnsweringForm(array $form_state = NULL, $rid) {
+  public function getAnsweringForm(array $form_state, $rid) {
     global $user, $base_path;
 
     // Init the variables.
