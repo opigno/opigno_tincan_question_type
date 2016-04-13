@@ -5,10 +5,7 @@
  * This file contains the class OpignoTincanQuestionTypeResponse.
  */
 
-
-
 /**
- * Class OpignoTincanQuestionTypeResponse
  * This class goal is to manage the user's answer(s) for the TinCan Question Type.
  */
 class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
@@ -32,10 +29,12 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
   /**
    * This constructor will init the $registration property.
    *
-   * OpignoTincanQuestionTypeResponse constructor.
-   * @param int $result_id The result ID
-   * @param \stdClass $question_node The question node
-   * @param array $answer The answer
+   * @param int $result_id
+   *   The result ID.
+   * @param object $question_node
+   *   The question node.
+   * @param array $answer
+   *   The answer.
    */
   public function __construct($result_id, \stdClass $question_node, $answer) {
     parent::__construct($result_id, $question_node, $answer);
@@ -55,12 +54,16 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
    */
   public function delete()
   {
-    if (!empty($this->rid))
+    if (!empty($this->rid)) {
       $this->deleteRegistration($this->rid);
+    }
   }
 
   /**
    * Calculate the score for the response.
+   *
+   * @return int
+   *   The score not weighted.
    */
   public function score() {
     return $this->getScoreFromLRS();
@@ -68,6 +71,9 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
 
   /**
    * Get the user's response.
+   *
+   * @return string
+   *   Empty string.
    */
   public function getResponse() {
     return '';
@@ -81,47 +87,57 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
    **************************/
 
   /**
-   * This method get the registration UUID from the database or from the
-   *   PHPSESSION variable.
+   * This method get the registration UUID.
+   *
+   * It gets it from the database or from the PHPSESSION variable.
    * If it is from the PHPSESSION, the method will save this registration to the
    *   database.
    * 
-   * @param $result_id int The result ID
-   * @return bool|string The registration UUID if success, FALSE if not found.
+   * @param int $result_id
+   *   The result ID.
+   *
+   * @return bool|string
+   *   The registration UUID if success, FALSE if not found.
    */
   public static function getRegistration($result_id) {
-    if (!empty($result_id))
-    {
+    // If we have the RID, try to get the registration from the DB.
+    if (!empty($result_id)) {
       $result = db_select(OpignoTincanQuestionTypeAnswersDatabase::dbName, 't')
         ->condition('rid', $result_id)
         ->fields('t')
         ->execute()->fetchAssoc();
 
+      // If we have a result, we can return the registration.
       if ($result)
         return $result['registration'];
 
-
+      // If we didn't already saved the registration, save it now and return the
+      // registration UUID.
       return self::saveRegistrationFromSession($result_id);
     }
 
+    // If we don't have the RID, try to get the registration from PHPSESSION.
+    if (isset($_SESSION[ OpignoTincanQuestionTypeQuestion::SESSIONKEY_REGISTRATION ])) {
+      return $_SESSION[OpignoTincanQuestionTypeQuestion::SESSIONKEY_REGISTRATION];
+    }
 
-    if (isset($_SESSION[ OpignoTincanQuestionTypeQuestion::SESSIONKEY_REGISTRATION ]))
-      return $_SESSION[ OpignoTincanQuestionTypeQuestion::SESSIONKEY_REGISTRATION];
-
-
-    return false;
+    // If we don't find the registration, return FALSE.
+    return FALSE;
   }
 
   /**
-   * This method will save the registration UUID that is in the PHPSESSION
-   *   variable to the database.
+   * This method will save the registration UUID.
    *
-   * @param $result_id int The result ID to associate with the registration UUID
-   * @return bool|string The registration UUID saved. FALSE if not found.
+   * It will save the one that is in the PHPSESSION variable to the database.
+   *
+   * @param int $result_id
+   *   The result ID to associate with the registration UUID.
+   *
+   * @return bool|string
+   *   The registration UUID saved. FALSE if not found.
    */
   protected static function saveRegistrationFromSession($result_id) {
-    if (isset($_SESSION[ OpignoTincanQuestionTypeQuestion::SESSIONKEY_REGISTRATION ]))
-    {
+    if (isset($_SESSION[ OpignoTincanQuestionTypeQuestion::SESSIONKEY_REGISTRATION ])) {
       $registration = $_SESSION[ OpignoTincanQuestionTypeQuestion::SESSIONKEY_REGISTRATION ];
 
       self::saveRegistration($registration, $result_id);
@@ -131,21 +147,25 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
       return $registration;
     }
 
-    return false;
+    return FALSE;
   }
 
   /**
    * This method will save the given registration UUID to the database.
    *
-   * @param $registration string The UUID to save
-   * @param $result_id int The result ID given by Quiz
-   * @throws \Exception If an error occurred while inserting to the database.
+   * @param string $registration
+   *   The UUID to save.
+   * @param int $result_id
+   *   The result ID given by Quiz.
+   *
+   * @throws \Exception
+   *   If an error occurred while inserting to the database.
    */
   protected static function saveRegistration($registration, $result_id) {
     db_insert(OpignoTincanQuestionTypeAnswersDatabase::dbName)
       ->fields(array(
         'rid' => $result_id,
-        'registration' => $registration
+        'registration' => $registration,
       ))
       ->execute();
   }
@@ -160,12 +180,13 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
   /**
    * This method deletes the registration from the database.
    * 
-   * @param $result_id int The result ID linked to the registration to delete.
+   * @param int $result_id
+   *   The result ID linked to the registration to delete.
    */
   protected function deleteRegistration($result_id) {
     db_delete(OpignoTincanQuestionTypeAnswersDatabase::dbName)
       ->condition(array(
-        'rid' => $result_id
+        'rid' => $result_id,
       ))
       ->execute();
   }
@@ -173,16 +194,18 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
   /**
    * This method will return the score from the LRS system for this response.
    * 
-   * @return int The score not weighted
+   * @return int
+   *   The score not weighted.
    */
   protected function getScoreFromLRS() {
+    // First, try to get the connection.
     $lrs = $this->getLRSConnection();
     if (!$lrs) {
       drupal_set_message(t('Connection to the LRS failed'));
       return 0;
     }
 
-
+    // If we have the connection, get the statement.
     if (empty($this->registration)) {
       drupal_set_message(t('There was an error while answering the question, please go back and try again.'));
       return 0;
@@ -194,20 +217,23 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
     }
 
     $scoreStatement = $this->getStatementFinalScore($lrs, $this->registration, $this->question->activity_id);
-    if (!$scoreStatement)
+    if (!$scoreStatement) {
       return 0;
+    }
 
-
+    // If we have the statement, extract the score and returns it.
     return $this->getScoreFromStatement($scoreStatement);
   }
 
 
   /**
-   * This method returns the connection to the LRS. If there is a problem, this
-   *   method will show an error message and return FALSE.
+   * This method returns the connection to the LRS.
    *
-   * @return bool|\TinCan\RemoteLRS FALSE in case of error. The LRS connection
-   *   if connection was success.
+   * If there is a problem, this method will show an error message and
+   *   return FALSE.
+   *
+   * @return bool|\TinCan\RemoteLRS
+   * FALSE in case of error. The LRS connection if connection was success.
    */
   protected function getLRSConnection() {
     $endpoint = variable_get('opigno_tincan_api_endpoint', '');
@@ -216,10 +242,11 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
 
     if (empty($endpoint) || empty($username) || empty($password)) {
       drupal_set_message(t('Please configure first the Opigno TinCan API module.'));
-      if (drupal_valid_path('admin/opigno/system/tincan'))
+      if (drupal_valid_path('admin/opigno/system/tincan')) {
         drupal_set_message(t('Go to !url', array('!url' => l('the settings page', 'admin/opigno/system/tincan'))));
+      }
 
-      return false;
+      return FALSE;
     }
 
     return new TinCan\RemoteLRS(
@@ -234,10 +261,15 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
   /**
    * Get the statement containing the final score.
    *
-   * @param \TinCan\RemoteLRS $lrs The LRS connection
-   * @param $registration_uuid string The registration UUID
-   * @param $activity_id string The activity ID of the statement
-   * @return bool|\TinCan\Statement The statement. If not found, returns FALSE.
+   * @param \TinCan\RemoteLRS $lrs
+   *   The LRS connection.
+   * @param string $registration_uuid
+   *   The registration UUID.
+   * @param string $activity_id
+   *   The activity ID of the statement.
+   *
+   * @return bool|\TinCan\Statement
+   *   The statement. If not found, returns FALSE.
    */
   protected function getStatementFinalScore(\TinCan\RemoteLRS $lrs, $registration_uuid, $activity_id) {
     $activity = new TinCan\Activity();
@@ -251,13 +283,12 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
       'activity' => $activity,
       'registration' => $registration_uuid,
       'verb' => $verbPassed,
-      'limit' => 1
+      'limit' => 1,
     ));
     $statements = $result->content->getStatements();
 
     // If nothing with passed, test with failed verb
-    if (count($statements) === 0)
-    {
+    if (count($statements) === 0) {
       $verbFailed = new TinCan\Verb();
       $verbFailed->setId(OpignoTincanApiTinCanVerbs::$failed['id']);
 
@@ -265,51 +296,62 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
         'activity' => $activity,
         'registration' => $registration_uuid,
         'verb' => $verbFailed,
-        'limit' => 1
+        'limit' => 1,
       ));
 
       $statements = $result->content->getStatements();
     }
 
-    if (count($statements) > 0)
+    if (count($statements) > 0) {
       return $statements[0];
-    else
-      return false;
+    }
+    else {
+      return FALSE;
+    }
   }
 
   /**
    * This method calculate the score using a statement.
    *
-   * @param $statement TinCan\Statement The statement that contains the score
-   * @return float|int The final score ready to be returned for the Quiz module.
-   *   Can returns 0 if the score is not found in the statement.
+   * @param TinCan\Statement $statement
+   *   The statement that contains the score.
+   *
+   * @return float|int
+   *   The final score ready to be returned for the Quiz module. Can returns 0
+   *   if the score is not found in the statement.
    */
   protected function getScoreFromStatement($statement) {
     $result = $statement->getResult();
-    if (!isset($result))
+    if (!isset($result)) {
       return 0;
+    }
 
     $score = $result->getScore();
     if (isset($score))
     {
       $scaled = $score->getScaled();
-      if (isset($scaled) && $scaled >= 0)
+      if (isset($scaled) && $scaled >= 0) {
         return $scaled * OpignoTincanQuestionTypeQuestion::SCORE_MAX;
+      }
 
       $raw = $score->getRaw();
       $max = $score->getMax();
       $min = $score->getMin();
-      if (!isset($min))
+      if (!isset($min)) {
         $min = 0;
+      }
 
-      if (isset($raw) && isset($max))
-        return ((float) ($raw-$min) / ($max-$min)) * OpignoTincanQuestionTypeQuestion::SCORE_MAX;
+      if (isset($raw) && isset($max)) {
+        return ((float) ($raw - $min) / ($max - $min)) * OpignoTincanQuestionTypeQuestion::SCORE_MAX;
+      }
     }
 
     $success = $result->getSuccess();
-    if (isset($success))
+    if (isset($success)) {
       return OpignoTincanQuestionTypeQuestion::SCORE_MAX;
+    }
 
     return 0;
   }
+
 }

@@ -10,7 +10,6 @@
 
 
 /**
- * Class OpignoTincanQuestionTypePropertiesDatabase
  * This class provide the information about the question properties database's table.
  */
 class OpignoTincanQuestionTypePropertiesDatabase
@@ -49,7 +48,6 @@ class OpignoTincanQuestionTypePropertiesDatabase
 
 
 /**
- * Class OpignoTincanQuestionTypeAnswersDatabase
  * This class provide the information about the users's answer(s) database's
  *   table for the TinCan Question Type.
  */

@@ -6,12 +6,9 @@
  */
 
 /**
- * Class OpignoTincanQuestionTypeQuestion
  * This class goal is to provide specific TinCan question information.
  */
 class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
-
-  use \TinCan;
 
   /***************
    *
@@ -83,7 +80,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
   /**
    * Getter function returning properties to be loaded when the node is loaded.
    *
-   * @see quiz_question_load().
+   * @see quiz_question_load()
    *
    * @return array
    *   The node properties
@@ -254,7 +251,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
       );
 
       // Get the registration UUID that will be used to recognise this answering
-      //  form. If the registration UUID does not exist, create one.
+      // form. If the registration UUID does not exist, create one.
       $registration = OpignoTincanQuestionTypeResponse::getRegistration($rid);
       if ($registration === FALSE) {
         $registration = TinCan\Util::getUUID();
