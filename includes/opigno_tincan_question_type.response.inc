@@ -1,6 +1,16 @@
 <?php
 
+/**
+ * @file
+ * This file contains the class OpignoTincanQuestionTypeResponse.
+ */
 
+
+
+/**
+ * Class OpignoTincanQuestionTypeResponse
+ * This class goal is to manage the user's answer(s) for the TinCan Question Type.
+ */
 class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse
 {
   protected $registration = null;

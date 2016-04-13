@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * @file
+ * The main module file which contains the main drupal hooks.
+ * You can find the todolist as well in this file.
+ */
+
+
+
+
 
 /**
  * Implementation of hook_quiz_question_info().
@@ -17,12 +26,16 @@ function opigno_tincan_question_type_quiz_question_info()
   );
 }
 
+
 /**
  * Implements hook_config().
  */
 function opigno_tincan_question_type_config() {
     return false;
 }
+
+
+
 
 
 /**

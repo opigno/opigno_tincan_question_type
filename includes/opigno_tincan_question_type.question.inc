@@ -1,6 +1,16 @@
 <?php
 
+/**
+ * @file
+ * This file contains the class OpignoTincanQuestionTypeQuestion.
+ */
 
+
+
+/**
+ * Class OpignoTincanQuestionTypeQuestion
+ * This class goal is to provide specific TinCan question information
+ */
 class OpignoTincanQuestionTypeQuestion extends QuizQuestion
 {
   const sessionKeyFile = 'opigno_tincan_question_type_fid';

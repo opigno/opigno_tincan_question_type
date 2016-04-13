@@ -1,6 +1,18 @@
 <?php
 
+/**
+ * @file
+ * This file contains the classes corresponding to each database's table.
+ * It contains these classes:
+ * - OpignoTincanQuestionTypePropertiesDatabase
+ * - OpignoTincanQuestionTypeAnswersDatabase
+ */
 
+
+/**
+ * Class OpignoTincanQuestionTypePropertiesDatabase
+ * This class provide the information about the question properties database's table.
+ */
 class OpignoTincanQuestionTypePropertiesDatabase
 {
   const dbName = 'opigno_tincan_question_type_question_properties';
@@ -35,6 +47,12 @@ class OpignoTincanQuestionTypePropertiesDatabase
   );
 }
 
+
+/**
+ * Class OpignoTincanQuestionTypeAnswersDatabase
+ * This class provide the information about the users's answer(s) database's
+ *   table for the TinCan Question Type.
+ */
 class OpignoTincanQuestionTypeAnswersDatabase
 {
   const dbName = 'opigno_tincan_question_type_answers';
