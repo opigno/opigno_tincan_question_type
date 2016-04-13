@@ -11,10 +11,9 @@
 
 
 /**
- * Implementation of hook_quiz_question_info().
+ * Implements hook_quiz_question_info().
  */
-function opigno_tincan_question_type_quiz_question_info()
-{
+function opigno_tincan_question_type_quiz_question_info() {
   return array(
     'opigno_tincan_question_type' => array(
       'name' => t('TinCan Package'),
@@ -31,7 +30,7 @@ function opigno_tincan_question_type_quiz_question_info()
  * Implements hook_config().
  */
 function opigno_tincan_question_type_config() {
-    return false;
+  return FALSE;
 }
 
 
