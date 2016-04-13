@@ -88,7 +88,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion
    * Provides validation for question before it is created.
    *
    * When a new question is created and initially submited, this is
-   * called to validate that the settings are acceptible.
+   * called to validate that the settings are acceptable.
    *
    * @param $form
    *  The processed form.
