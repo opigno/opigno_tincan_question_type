@@ -25,4 +25,6 @@ function opigno_tincan_question_type_config() {
 }
 
 
-// TODO: Add a checkbox saying "no score". If it is checked, it would say that this package send no score to the LRS (always success).
+/**
+ * TODO: Add a checkbox saying "no score". If it is checked, it would say that this package send no score to the LRS (always success).
+ */
