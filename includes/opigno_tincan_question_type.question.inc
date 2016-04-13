@@ -350,11 +350,13 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
   }
 
   /**
-   * This method gives the package name, after being renamed by the system if it happened.
+   * Gives the package name, after being renamed by the system if it happened.
    *
-   * @param stdClass $file The package file
+   * @param object $file
+   *   The package file
    *
-   * @return string The package name
+   * @return string
+   *   The package name
    */
   protected function getPackageName($file) {
     return pathinfo($file->uri, PATHINFO_FILENAME);
