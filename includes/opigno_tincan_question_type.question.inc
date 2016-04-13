@@ -161,27 +161,26 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
   }
 
   /**
-   * Implementation of delete()
+   * Implementation of delete().
    *
    * @see QuizQuestion#delete($only_this_version)
    */
   public function delete($only_this_version = FALSE) {
     parent::delete($only_this_version);
 
-    if (!isset($this->nodeProperties['fid']))
+    if (!isset($this->nodeProperties['fid'])) {
       $this->getNodeProperties();
+    }
 
     $file = file_load($this->nodeProperties['fid']);
 
-    $isDeleted = FALSE;
-    if ($file)
-    {
+    $is_deleted = FALSE;
+    if ($file) {
       file_usage_delete($file, 'opigno_tincan_question_type', 'node', $this->node->nid);
-      $isDeleted = file_delete($file);
+      $is_deleted = file_delete($file);
     }
 
-    if ($isDeleted)
-    {
+    if ($is_deleted) {
       file_unmanaged_delete_recursive($this->getExtractPath($file));
     }
 
@@ -189,10 +188,10 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
   }
 
   /**
-   * Allow question types to override the body field title
+   * Allow question types to override the body field title.
    *
    * @return
-   *  The title for the body field
+   *   The title for the body field.
    */
   public function getBodyFieldTitle() {
     return t('Tincan package description');
@@ -202,13 +201,12 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
    * Get the form through which the user will answer the question.
    *
    * @param $form_state
-   *  The FAPI form_state array
+   *   The FAPI form_state array
    * @param $rid
-   *  The result id.
+   *   The result id.
+   *
    * @return
-   *  Must return a FAPI array. At the moment all form elements that takes
-   *  user response must have a key named "tries". (This is a Quiz 3.x legacy AFAIK. I'm
-   *  not thrilled about it...)
+   *   Must return a FAPI array.
    */
   public function getAnsweringForm(array $form_state = NULL, $rid) {
     global $user, $base_path;
@@ -218,7 +216,6 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
     $markup = '';
 
     $launch_file = $this->nodeProperties['launch_filename'];
-
 
 
     $lrs_endpoint = variable_get('opigno_tincan_api_endpoint', '');
@@ -233,47 +230,48 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
     }
     else
     {
-      $auth = 'Basic '. base64_encode($lrs_username .':'. $lrs_password);
+      $auth = 'Basic '. base64_encode($lrs_username . ':' . $lrs_password);
 
       $actor = array(
         'mbox_sha1sum' => sha1('mailto:' . $user->mail),
-        'name' => $user->name
+        'name' => $user->name,
       );
 
 
       $registration = OpignoTincanQuestionTypeResponse::getRegistration($rid);
-      if ($registration === FALSE)
+      if ($registration === FALSE) {
         $registration = TinCan\Util::getUUID();
+      }
 
       $launch_file .=
-        '?endpoint='. rawurlencode($lrs_endpoint) .
-        '&auth='. rawurlencode($auth) .
-        '&actor='. rawurlencode(json_encode($actor)) .
-        '&registration='. rawurlencode($registration);
+        '?endpoint=' . rawurlencode($lrs_endpoint) .
+        '&auth=' . rawurlencode($auth) .
+        '&actor=' . rawurlencode(json_encode($actor)) .
+        '&registration=' . rawurlencode($registration);
 
       $_SESSION[self::SESSIONKEY_REGISTRATION] = $registration;
     }
-
 
 
     $file = file_load($this->nodeProperties['fid']);
 
     $filename = $this->getPackageName($file);
 
-    $uri = self::PATH_PUBLIC_EXTRACTED_PACKAGE_FOLDER . $filename .'/'. $launch_file;
-    $uri = str_replace('public://', $base_path .'sites/default/files/', $uri);
+    $uri = self::PATH_PUBLIC_EXTRACTED_PACKAGE_FOLDER . $filename . '/' . $launch_file;
+    $uri = str_replace('public://', $base_path . 'sites/default/files/', $uri);
 
     $markup .= '
-      <iframe style="width: 100%; min-height: 800px; border: 0;" src="'. $uri .'"></iframe>
-    ';
-
+      <iframe
+        style="width: 100%; min-height: 800px; border: 0;"
+        src="' . $uri . '">
+      </iframe>';
 
 
     $form = parent::getAnsweringForm($form_state, $rid);
 
     $form['iframe'] = array(
       '#type' => 'markup',
-      '#markup' => $markup
+      '#markup' => $markup,
     );
 
     return $form;
@@ -307,7 +305,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
       return FALSE;
     }
     else {
-      $archiver->extract( $this->getExtractPath($file) );
+      $archiver->extract($this->getExtractPath($file));
       return TRUE;
     }
   }
