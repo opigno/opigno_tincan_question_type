@@ -11,7 +11,8 @@ use TinCan\Statement;
 use TinCan\Verb;
 
 /**
- * This class goal is to manage the user's answer(s) for the TinCan Question Type.
+ * This class goal is to manage the user's answer(s) for the TinCan
+ *   Question Type.
  */
 class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
 
@@ -46,8 +47,6 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
 
     $this->registration = self::getRegistration($result_id);
   }
-
-
 
   /**
    * Save the current response.
@@ -85,7 +84,7 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
     return '';
   }
 
-  
+
   /***************
    *
    * STATIC METHODS
