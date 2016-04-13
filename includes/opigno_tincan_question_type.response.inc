@@ -4,8 +4,10 @@
  * @file
  * This file contains the class OpignoTincanQuestionTypeResponse.
  */
+
 use TinCan\Activity;
 use TinCan\RemoteLRS;
+use TinCan\Statement;
 use TinCan\Verb;
 
 /**
@@ -20,7 +22,7 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
    *
    **************************/
 
-  protected $registration = null;
+  protected $registration = NULL;
 
 
   /***************
@@ -39,24 +41,25 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
    * @param array $answer
    *   The answer.
    */
-  public function __construct($result_id, \stdClass $question_node, $answer) {
+  public function __construct($result_id, stdClass $question_node, $answer) {
     parent::__construct($result_id, $question_node, $answer);
 
     $this->registration = self::getRegistration($result_id);
   }
 
+
+
   /**
    * Save the current response.
    */
   public function save() {
-    // Nothing to save
+    // Nothing to save.
   }
 
   /**
    * Delete the response.
    */
-  public function delete()
-  {
+  public function delete() {
     if (!empty($this->rid)) {
       $this->deleteRegistration($this->rid);
     }
@@ -95,7 +98,7 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
    * It gets it from the database or from the PHPSESSION variable.
    * If it is from the PHPSESSION, the method will save this registration to the
    *   database.
-   * 
+   *
    * @param int $result_id
    *   The result ID.
    *
@@ -111,8 +114,9 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
         ->execute()->fetchAssoc();
 
       // If we have a result, we can return the registration.
-      if ($result)
+      if ($result) {
         return $result['registration'];
+      }
 
       // If we didn't already saved the registration, save it now and return the
       // registration UUID.
@@ -120,7 +124,7 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
     }
 
     // If we don't have the RID, try to get the registration from PHPSESSION.
-    if (isset($_SESSION[ OpignoTincanQuestionTypeQuestion::SESSIONKEY_REGISTRATION ])) {
+    if (isset($_SESSION[OpignoTincanQuestionTypeQuestion::SESSIONKEY_REGISTRATION])) {
       return $_SESSION[OpignoTincanQuestionTypeQuestion::SESSIONKEY_REGISTRATION];
     }
 
@@ -182,7 +186,7 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
 
   /**
    * This method deletes the registration from the database.
-   * 
+   *
    * @param int $result_id
    *   The result ID linked to the registration to delete.
    */
@@ -196,7 +200,7 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
 
   /**
    * This method will return the score from the LRS system for this response.
-   * 
+   *
    * @return int
    *   The score not weighted.
    */
@@ -264,7 +268,7 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
   /**
    * Get the statement containing the final score.
    *
-   * @param \TinCan\RemoteLRS $lrs
+   * @param RemoteLRS $lrs
    *   The LRS connection.
    * @param string $registration_uuid
    *   The registration UUID.
@@ -274,14 +278,14 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
    * @return bool|\TinCan\Statement
    *   The statement. If not found, returns FALSE.
    */
-  protected function getStatementFinalScore(\TinCan\RemoteLRS $lrs, $registration_uuid, $activity_id) {
+  protected function getStatementFinalScore(RemoteLRS $lrs, $registration_uuid, $activity_id) {
     $activity = new Activity();
     $activity->setId($activity_id);
 
     $verb_passed = new Verb();
     $verb_passed->setId(OpignoTincanApiTinCanVerbs::$passed['id']);
 
-    // Test with passed verb
+    // Test with verb "passed".
     $result = $lrs->queryStatements(array(
       'activity' => $activity,
       'registration' => $registration_uuid,
@@ -290,7 +294,7 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
     ));
     $statements = $result->content->getStatements();
 
-    // If nothing with passed, test with failed verb.
+    // If nothing with "passed", test with "failed" verb.
     if (count($statements) === 0) {
       $verb_failed = new Verb();
       $verb_failed->setId(OpignoTincanApiTinCanVerbs::$failed['id']);
@@ -316,14 +320,14 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
   /**
    * This method calculate the score using a statement.
    *
-   * @param TinCan\Statement $statement
+   * @param Statement $statement
    *   The statement that contains the score.
    *
    * @return float|int
    *   The final score ready to be returned for the Quiz module. Can returns 0
    *   if the score is not found in the statement.
    */
-  protected function getScoreFromStatement(\TinCan\Statement $statement) {
+  protected function getScoreFromStatement(Statement $statement) {
     $result = $statement->getResult();
     if (!isset($result)) {
       return 0;
