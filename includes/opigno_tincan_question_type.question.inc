@@ -288,11 +288,17 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
 
   /**
    * This method will unzip the package to the public extracted folder.
-   * It will use the constants self::PATH_PUBLIC_EXTRACTED_PACKAGE_FOLDER
    *
-   * @param $file stdClass The file to unzip
-   * @return bool TRUE if success, else FALSE.
-   * @throws \Exception If the file is unsupported
+   * It will use the constants self::PATH_PUBLIC_EXTRACTED_PACKAGE_FOLDER.
+   *
+   * @param object $file
+   *   The file to unzip.
+   *
+   * @return bool
+   *   TRUE if success, else FALSE.
+   *
+   * @throws \Exception
+   *   If the file is unsupported.
    */
   protected function unzipPackage($file) {
     $archiver = archiver_get_archiver($file->uri);
@@ -307,12 +313,16 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
   }
 
   /**
-   * This method will return the Activity ID and the launch file described in
-   *   the tincan.xml file that is in the extracted package.
+   * This method will return the Activity ID and the launch file.
    *
-   * @param $file stdClass The file that was unzipped
-   * @return array|bool An array('id', 'launch') if all the information are
-   *   found, FALSE if not.
+   * This must be in the tincan.xml file that is in the extracted package.
+   * You can find more information in the README.md file of this module.
+   *
+   * @param object $file
+   *   The file that was unzipped.
+   *
+   * @return array|bool
+   *   An array('id', 'launch') if all the information are found, FALSE if not.
    */
   protected function getInfoFromExtractedPackage($file) {
     $tincan_file = $this->getExtractPath($file) .'tincan.xml';
@@ -341,8 +351,11 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
   /**
    * This method gives the path to the extracted package.
    *
-   * @param $file stdClass The extracted file
-   * @return string The path to the extracted package
+   * @param object $file
+   *   The extracted file.
+   *
+   * @return string
+   *   The path to the extracted package.
    */
   protected function getExtractPath($file) {
     $filename = $this->getPackageName($file);
@@ -353,10 +366,10 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
    * Gives the package name, after being renamed by the system if it happened.
    *
    * @param object $file
-   *   The package file
+   *   The package file.
    *
    * @return string
-   *   The package name
+   *   The package name.
    */
   protected function getPackageName($file) {
     return pathinfo($file->uri, PATHINFO_FILENAME);
