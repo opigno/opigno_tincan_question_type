@@ -5,14 +5,13 @@
  * This file contains the class OpignoTincanQuestionTypeQuestion.
  */
 
-
-
 /**
  * Class OpignoTincanQuestionTypeQuestion
- * This class goal is to provide specific TinCan question information
+ * This class goal is to provide specific TinCan question information.
  */
 class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
 
+  use \TinCan;
 
   /***************
    *
@@ -60,7 +59,9 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
       return;
     }
 
-    // TODO: If is not new, remove old package after the update (first, use file_usage_delete())
+    /*
+     * TODO: If is not new, remove old package after the update (first, use file_usage_delete())
+     */
 
     $file->status = FILE_STATUS_PERMANENT;
     file_save($file);
@@ -74,7 +75,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
       ->fields(array(
         'fid' => $_SESSION[self::SESSIONKEY_FILE],
         'activity_id' => $activity_id,
-        'launch_filename' => $launch_filename
+        'launch_filename' => $launch_filename,
       ))
       ->execute();
   }
@@ -82,7 +83,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
   /**
    * Getter function returning properties to be loaded when the node is loaded.
    *
-   * @see load hook in quiz_question.module (quiz_question_load)
+   * @see quiz_question_load().
    *
    * @return array
    *   The node properties
@@ -132,8 +133,9 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
           $_SESSION[self::SESSIONKEY_FILE] = $form['file']['#value']['fid'];
         }
       }
-      else
+      else {
         form_set_error('file', t('Unable to open the archive'));
+      }
     }
   }
 
@@ -158,10 +160,10 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
         '#default_value' => $this->nodeProperties['fid'],
         '#upload_location' => self::PATH_PUBLIC_PACKAGE_FOLDER,
         '#upload_validators' => array(
-          'file_validate_extensions' => array('zip')
+          'file_validate_extensions' => array('zip'),
         ),
-        '#required' => true,
-      )
+        '#required' => TRUE,
+      ),
     );
   }
 
@@ -196,7 +198,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
       file_unmanaged_delete_recursive($this->getExtractPath($file));
     }
 
-    // TODO: check if it works even when we create multiple version of this question
+    // TODO: check if it works even when we create multiple version of this question.
   }
 
   /**
@@ -235,15 +237,16 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
     $lrs_username = variable_get('opigno_tincan_api_username', '');
     $lrs_password = variable_get('opigno_tincan_api_password', '');
 
-    if ((empty($lrs_endpoint) || empty($lrs_username) || empty($lrs_password))
-      && drupal_valid_path('admin/opigno/system/tincan'))
-    {
-      drupal_set_message(t('The module Opigno TinCan API is not configured. Go to !url', array('!url' => l('the settings page.', 'admin/opigno/system/tincan'))));
+    if (
+      (empty($lrs_endpoint) || empty($lrs_username) || empty($lrs_password))
+      && drupal_valid_path('admin/opigno/system/tincan')
+    ) {
+      drupal_set_message(t('The module Opigno TinCan API is not configured. Go to !url', array('!url' => l(t('the settings page.'), 'admin/opigno/system/tincan'))));
       unset($_SESSION[self::SESSIONKEY_REGISTRATION]);
     }
     else {
       // If connected to the LRS, create the URI parameters.
-      $auth = 'Basic '. base64_encode($lrs_username . ':' . $lrs_password);
+      $auth = 'Basic ' . base64_encode($lrs_username . ':' . $lrs_password);
 
       $actor = array(
         'mbox_sha1sum' => sha1('mailto:' . $user->mail),
@@ -251,10 +254,10 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
       );
 
       // Get the registration UUID that will be used to recognise this answering
-      //   form. If the registration UUID does not exist, create one.
+      //  form. If the registration UUID does not exist, create one.
       $registration = OpignoTincanQuestionTypeResponse::getRegistration($rid);
       if ($registration === FALSE) {
-        $registration = \TinCan\Util::getUUID();
+        $registration = TinCan\Util::getUUID();
       }
 
       $launch_file .=
@@ -266,7 +269,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
       $_SESSION[self::SESSIONKEY_REGISTRATION] = $registration;
     }
 
-    // Get the file and construct his URI
+    // Get the file and construct his URI.
     $file = file_load($this->nodeProperties['fid']);
 
     $filename = $this->getPackageName($file);
@@ -280,7 +283,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
         src="' . $uri . '">
       </iframe>';
 
-    // Construct the form
+    // Construct the form.
     $form = parent::getAnsweringForm($form_state, $rid);
 
     $form['iframe'] = array(
