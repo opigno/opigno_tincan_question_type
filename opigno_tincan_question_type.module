@@ -10,8 +10,8 @@ function opigno_tincan_question_type_quiz_question_info()
     'opigno_tincan_question_type' => array(
       'name' => t('TinCan Package'),
       'description' => t('Quiz questions that allow a user to answer to a TinCan package.'),
-      'question provider' => 'OpignoTincanQuestion',
-      'response provider' => 'OpignoTincanResponse',
+      'question provider' => 'OpignoTincanQuestionTypeQuestion',
+      'response provider' => 'OpignoTincanQuestionTypeResponse',
       'module' => 'quiz_question',
     ),
   );

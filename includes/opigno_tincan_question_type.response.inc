@@ -1,7 +1,7 @@
 <?php
 
 
-class OpignoTincanResponse extends QuizQuestionResponse
+class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse
 {
   protected $registration = null;
 

@@ -1,7 +1,7 @@
 <?php
 
 
-class OpignoTincanQuestion extends QuizQuestion
+class OpignoTincanQuestionTypeQuestion extends QuizQuestion
 {
   const sessionKeyFile = 'opigno_tincan_question_type_fid';
   const sessionRegistration = 'opigno_tincan_question_type_registration';
