@@ -35,25 +35,28 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
 
   /**
    * Save question type specific node properties.
+   *
+   * @param bool $is_new
+   *   Indicate if the node is a new one or an update.
    */
   public function saveNodeProperties($is_new = FALSE) {
-    if (!isset($_SESSION[self::SESSIONKEY_FILE]))
-    {
+    if (!isset($_SESSION[self::SESSIONKEY_FILE])) {
       form_set_error('file', t('Error while uploading the file.'));
       return;
     }
 
     $file = file_load($_SESSION[self::SESSIONKEY_FILE]);
-    if (!$file)
-    {
+    if (!$file) {
       form_set_error('file', t('Error while opening the file.'));
       return;
     }
 
     $package_info = $this->getInfoFromExtractedPackage($file);
-    if ($package_info === FALSE)
-    {
-      form_set_error('file', t('The package does not contain an activity ID or a launch file'));
+    if ($package_info === FALSE) {
+      form_set_error(
+        'file',
+        t('The package does not contain an activity ID or a launch file')
+      );
       return;
     }
 
@@ -82,10 +85,12 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
    * @see load hook in quiz_question.module (quiz_question_load)
    *
    * @return array
+   *   The node properties
    */
   public function getNodeProperties() {
-    if (isset($this->nodeProperties['fid']))
+    if (isset($this->nodeProperties['fid'])) {
       return $this->nodeProperties;
+    }
 
     parent::getNodeProperties();
     $result = db_select(OpignoTincanQuestionTypePropertiesDatabase::dbName, 't')
@@ -95,8 +100,9 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
       ->range(0, 1)
       ->execute()->fetchAssoc();
 
-    if ($result)
+    if ($result) {
       $this->nodeProperties += $result;
+    }
 
     return $this->nodeProperties;
   }
@@ -107,20 +113,24 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
    * When a new question is created and initially submited, this is
    * called to validate that the settings are acceptable.
    *
-   * @param $form
-   *  The processed form.
+   * @param array $form
+   *   The processed form.
    */
   public function validateNode(array &$form) {
     $file = file_load($form['file']['#value']['fid']);
 
-    if ($file && $file->status != FILE_STATUS_PERMANENT)
-    {
+    if ($file && $file->status != FILE_STATUS_PERMANENT) {
       if ($this->unzipPackage($file)) {
         $package_info = $this->getInfoFromExtractedPackage($file);
-        if ($package_info === FALSE)
-          form_set_error('file', t('The package does not contain the activity ID or the launch file'));
-        else
+        if ($package_info === FALSE) {
+          form_set_error(
+            'file',
+            t('The package does not contain the activity ID or the launch file')
+          );
+        }
+        else {
           $_SESSION[self::SESSIONKEY_FILE] = $form['file']['#value']['fid'];
+        }
       }
       else
         form_set_error('file', t('Unable to open the archive'));
@@ -130,14 +140,16 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
   /**
    * Get the form used to create a new question.
    *
-   * @param
-   *  FAPI form state
-   * @return
-   *  Must return a FAPI array.
+   * @param array $form_state
+   *   FAPI form state.
+   *
+   * @return array
+   *   Must return a FAPI array.
    */
   public function getCreationForm(array &$form_state = NULL) {
-    if (isset($this->node->nid) && !isset($this->nodeProperties['fid']))
+    if (isset($this->node->nid) && !isset($this->nodeProperties['fid'])) {
       $this->getNodeProperties();
+    }
 
     return array(
       'file' => array(
@@ -148,7 +160,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
         '#upload_validators' => array(
           'file_validate_extensions' => array('zip')
         ),
-        '#required' => true
+        '#required' => true,
       )
     );
   }
@@ -190,7 +202,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
   /**
    * Allow question types to override the body field title.
    *
-   * @return
+   * @return string
    *   The title for the body field.
    */
   public function getBodyFieldTitle() {
@@ -200,24 +212,25 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
   /**
    * Get the form through which the user will answer the question.
    *
-   * @param $form_state
-   *   The FAPI form_state array
-   * @param $rid
+   * @param array $form_state
+   *   The FAPI form_state array.
+   * @param int $rid
    *   The result id.
    *
-   * @return
+   * @return array
    *   Must return a FAPI array.
    */
   public function getAnsweringForm(array $form_state = NULL, $rid) {
     global $user, $base_path;
 
+    // Init the variables.
     $this->getNodeProperties();
 
     $markup = '';
 
     $launch_file = $this->nodeProperties['launch_filename'];
 
-
+    // Connect to the LRS.
     $lrs_endpoint = variable_get('opigno_tincan_api_endpoint', '');
     $lrs_username = variable_get('opigno_tincan_api_username', '');
     $lrs_password = variable_get('opigno_tincan_api_password', '');
@@ -228,8 +241,8 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
       drupal_set_message(t('The module Opigno TinCan API is not configured. Go to !url', array('!url' => l('the settings page.', 'admin/opigno/system/tincan'))));
       unset($_SESSION[self::SESSIONKEY_REGISTRATION]);
     }
-    else
-    {
+    else {
+      // If connected to the LRS, create the URI parameters.
       $auth = 'Basic '. base64_encode($lrs_username . ':' . $lrs_password);
 
       $actor = array(
@@ -237,10 +250,11 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
         'name' => $user->name,
       );
 
-
+      // Get the registration UUID that will be used to recognise this answering
+      //   form. If the registration UUID does not exist, create one.
       $registration = OpignoTincanQuestionTypeResponse::getRegistration($rid);
       if ($registration === FALSE) {
-        $registration = TinCan\Util::getUUID();
+        $registration = \TinCan\Util::getUUID();
       }
 
       $launch_file .=
@@ -252,7 +266,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
       $_SESSION[self::SESSIONKEY_REGISTRATION] = $registration;
     }
 
-
+    // Get the file and construct his URI
     $file = file_load($this->nodeProperties['fid']);
 
     $filename = $this->getPackageName($file);
@@ -266,7 +280,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
         src="' . $uri . '">
       </iframe>';
 
-
+    // Construct the form
     $form = parent::getAnsweringForm($form_state, $rid);
 
     $form['iframe'] = array(
