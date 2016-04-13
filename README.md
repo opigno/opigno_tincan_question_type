@@ -1,6 +1,15 @@
-# Minimum requirements for TinCan Packages
+# Opigno TinCan Question Type
 
-## About *tincan.xml*
+This module add a new question type for the [Quiz module](https://www.drupal.org/project/quiz).
+With this new question type, you will be able to import TinCan Packages to your Drupal instance and to use it as a question.
+
+This module as been created mainly for the [Opigno LMS](https://www.drupal.org/project/opigno_lms) and is maintained by [Connect-i](https://www.drupal.org/node/1773678), the editor of Opigno.
+
+
+
+## Minimum requirements for the TinCan Packages
+
+### About *tincan.xml*
 - The TinCan Package must contain the file *tincan.xml*.
 - This file must follow the guidelines written [here](https://github.com/RusticiSoftware/launch/blob/master/lms_lrs.md).
 - This file must contain, at least, an Activity with an Activity ID and the launch file.
@@ -17,7 +26,7 @@ So, the file should be, at least, like this one :
 </tincan>
 ```
 
-## About statement
+### About statement
 - The package should send a statement to the LRS containing the final score.
 - This statement must use the verb *http://adlnet.gov/expapi/verbs/passed* or *http://adlnet.gov/expapi/verbs/failed*.
 - The score property in this statement should have, at least, the *scaled* property or the *raw* and *max* properties or the *success* property.
