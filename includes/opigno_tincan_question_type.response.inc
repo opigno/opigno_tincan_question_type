@@ -11,8 +11,7 @@ use TinCan\Statement;
 use TinCan\Verb;
 
 /**
- * This class goal is to manage the user's answer(s) for the TinCan
- *   Question Type.
+ * This class goal is to manage the user's answer(s).
  */
 class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
 
