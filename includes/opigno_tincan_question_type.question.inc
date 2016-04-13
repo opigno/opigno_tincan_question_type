@@ -335,12 +335,12 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
     if (!$xml)
       return FALSE;
 
-    // Check if the launch exists
-    if (!isset($xml->activities->activity->launch))
+    // Check if the launch exists.
+    if (isset($xml->activities->activity->launch) === FALSE)
       return FALSE;
 
-    // Check if the activity ID exists
-    if (!isset($xml->activities->activity['id']))
+    // Check if the activity ID exists.
+    if (isset($xml->activities->activity['id']) === FALSE)
       return FALSE;
 
     return array(
