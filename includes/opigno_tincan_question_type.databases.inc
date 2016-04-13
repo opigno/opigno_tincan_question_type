@@ -5,8 +5,8 @@
  * This file contains the classes corresponding to each database's table.
  *
  * It contains these classes:
- * - OpignoTincanQuestionTypePropertiesDatabase
- * - OpignoTincanQuestionTypeAnswersDatabase
+ * - OpignoTincanQuestionTypePropertiesDatabase.
+ * - OpignoTincanQuestionTypeAnswersDatabase.
  */
 
 /**
@@ -43,6 +43,7 @@ class OpignoTincanQuestionTypePropertiesDatabase {
     'question_nid' => array('nid'),
     'question_vid' => array('vid'),
   );
+
 }
 
 
@@ -67,4 +68,5 @@ class OpignoTincanQuestionTypeAnswersDatabase {
   public static $indexes = array(
     'result_id' => array('rid'),
   );
+
 }
