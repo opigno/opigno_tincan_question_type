@@ -2,8 +2,8 @@
 
 /**
  * @file
- *
  * The main module file which contains the main drupal hooks.
+ *
  * You can find the todolist as well in this file.
  */
 
