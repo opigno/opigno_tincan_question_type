@@ -4,6 +4,9 @@
  * @file
  * This file contains the class OpignoTincanQuestionTypeResponse.
  */
+use TinCan\Activity;
+use TinCan\RemoteLRS;
+use TinCan\Verb;
 
 /**
  * This class goal is to manage the user's answer(s) for the TinCan Question Type.
@@ -66,7 +69,7 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
    *   The score not weighted.
    */
   public function score() {
-    return $this->getScoreFromLRS();
+    return $this->getScoreFromLrs();
   }
 
   /**
@@ -137,12 +140,12 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
    *   The registration UUID saved. FALSE if not found.
    */
   protected static function saveRegistrationFromSession($result_id) {
-    if (isset($_SESSION[ OpignoTincanQuestionTypeQuestion::SESSIONKEY_REGISTRATION ])) {
-      $registration = $_SESSION[ OpignoTincanQuestionTypeQuestion::SESSIONKEY_REGISTRATION ];
+    if (isset($_SESSION[OpignoTincanQuestionTypeQuestion::SESSIONKEY_REGISTRATION])) {
+      $registration = $_SESSION[OpignoTincanQuestionTypeQuestion::SESSIONKEY_REGISTRATION];
 
       self::saveRegistration($registration, $result_id);
 
-      unset($_SESSION[ OpignoTincanQuestionTypeQuestion::SESSIONKEY_REGISTRATION ]);
+      unset($_SESSION[OpignoTincanQuestionTypeQuestion::SESSIONKEY_REGISTRATION]);
 
       return $registration;
     }
@@ -197,9 +200,9 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
    * @return int
    *   The score not weighted.
    */
-  protected function getScoreFromLRS() {
+  protected function getScoreFromLrs() {
     // First, try to get the connection.
-    $lrs = $this->getLRSConnection();
+    $lrs = $this->getLrsConnection();
     if (!$lrs) {
       drupal_set_message(t('Connection to the LRS failed'));
       return 0;
@@ -216,13 +219,13 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
       return 0;
     }
 
-    $scoreStatement = $this->getStatementFinalScore($lrs, $this->registration, $this->question->activity_id);
-    if (!$scoreStatement) {
+    $score_statement = $this->getStatementFinalScore($lrs, $this->registration, $this->question->activity_id);
+    if (!$score_statement) {
       return 0;
     }
 
     // If we have the statement, extract the score and returns it.
-    return $this->getScoreFromStatement($scoreStatement);
+    return $this->getScoreFromStatement($score_statement);
   }
 
 
@@ -233,9 +236,9 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
    *   return FALSE.
    *
    * @return bool|\TinCan\RemoteLRS
-   * FALSE in case of error. The LRS connection if connection was success.
+   *   FALSE in case of error. The LRS connection if connection was success.
    */
-  protected function getLRSConnection() {
+  protected function getLrsConnection() {
     $endpoint = variable_get('opigno_tincan_api_endpoint', '');
     $username = variable_get('opigno_tincan_api_username', '');
     $password = variable_get('opigno_tincan_api_password', '');
@@ -243,13 +246,13 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
     if (empty($endpoint) || empty($username) || empty($password)) {
       drupal_set_message(t('Please configure first the Opigno TinCan API module.'));
       if (drupal_valid_path('admin/opigno/system/tincan')) {
-        drupal_set_message(t('Go to !url', array('!url' => l('the settings page', 'admin/opigno/system/tincan'))));
+        drupal_set_message(t('Go to !url', array('!url' => l(t('the settings page'), 'admin/opigno/system/tincan'))));
       }
 
       return FALSE;
     }
 
-    return new TinCan\RemoteLRS(
+    return new RemoteLRS(
       $endpoint,
       '1.0.1',
       $username,
@@ -272,30 +275,30 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
    *   The statement. If not found, returns FALSE.
    */
   protected function getStatementFinalScore(\TinCan\RemoteLRS $lrs, $registration_uuid, $activity_id) {
-    $activity = new TinCan\Activity();
+    $activity = new Activity();
     $activity->setId($activity_id);
 
-    $verbPassed = new TinCan\Verb();
-    $verbPassed->setId(OpignoTincanApiTinCanVerbs::$passed['id']);
+    $verb_passed = new Verb();
+    $verb_passed->setId(OpignoTincanApiTinCanVerbs::$passed['id']);
 
     // Test with passed verb
     $result = $lrs->queryStatements(array(
       'activity' => $activity,
       'registration' => $registration_uuid,
-      'verb' => $verbPassed,
+      'verb' => $verb_passed,
       'limit' => 1,
     ));
     $statements = $result->content->getStatements();
 
-    // If nothing with passed, test with failed verb
+    // If nothing with passed, test with failed verb.
     if (count($statements) === 0) {
-      $verbFailed = new TinCan\Verb();
-      $verbFailed->setId(OpignoTincanApiTinCanVerbs::$failed['id']);
+      $verb_failed = new Verb();
+      $verb_failed->setId(OpignoTincanApiTinCanVerbs::$failed['id']);
 
       $result = $lrs->queryStatements(array(
         'activity' => $activity,
         'registration' => $registration_uuid,
-        'verb' => $verbFailed,
+        'verb' => $verb_failed,
         'limit' => 1,
       ));
 
@@ -320,15 +323,14 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
    *   The final score ready to be returned for the Quiz module. Can returns 0
    *   if the score is not found in the statement.
    */
-  protected function getScoreFromStatement($statement) {
+  protected function getScoreFromStatement(\TinCan\Statement $statement) {
     $result = $statement->getResult();
     if (!isset($result)) {
       return 0;
     }
 
     $score = $result->getScore();
-    if (isset($score))
-    {
+    if (isset($score)) {
       $scaled = $score->getScaled();
       if (isset($scaled) && $scaled >= 0) {
         return $scaled * OpignoTincanQuestionTypeQuestion::SCORE_MAX;

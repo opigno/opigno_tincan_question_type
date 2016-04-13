@@ -5,6 +5,8 @@
  * This file contains the class OpignoTincanQuestionTypeQuestion.
  */
 
+use TinCan\Util;
+
 /**
  * This class goal is to provide specific TinCan question information.
  */
@@ -254,7 +256,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
       // form. If the registration UUID does not exist, create one.
       $registration = OpignoTincanQuestionTypeResponse::getRegistration($rid);
       if ($registration === FALSE) {
-        $registration = TinCan\Util::getUUID();
+        $registration = Util::getUUID();
       }
 
       $launch_file .=
