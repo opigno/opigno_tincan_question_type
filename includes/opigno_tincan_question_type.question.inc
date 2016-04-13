@@ -51,7 +51,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
     }
 
     $package_info = $this->getInfoFromExtractedPackage($file);
-    if ($package_info === false)
+    if ($package_info === FALSE)
     {
       form_set_error('file', t('The package does not contain an activity ID or a launch file'));
       return;
@@ -117,7 +117,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
     {
       if ($this->unzipPackage($file)) {
         $package_info = $this->getInfoFromExtractedPackage($file);
-        if ($package_info === false)
+        if ($package_info === FALSE)
           form_set_error('file', t('The package does not contain the activity ID or the launch file'));
         else
           $_SESSION[self::SESSIONKEY_FILE] = $form['file']['#value']['fid'];
@@ -173,7 +173,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
 
     $file = file_load($this->nodeProperties['fid']);
 
-    $isDeleted = false;
+    $isDeleted = FALSE;
     if ($file)
     {
       file_usage_delete($file, 'opigno_tincan_question_type', 'node', $this->node->nid);
@@ -242,7 +242,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
 
 
       $registration = OpignoTincanQuestionTypeResponse::getRegistration($rid);
-      if ($registration === false)
+      if ($registration === FALSE)
         $registration = TinCan\Util::getUUID();
 
       $launch_file .=
@@ -304,19 +304,20 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
     $archiver = archiver_get_archiver($file->uri);
 
     if (!$archiver) {
-      return false;
+      return FALSE;
     }
     else {
       $archiver->extract( $this->getExtractPath($file) );
-      return true;
+      return TRUE;
     }
   }
 
   /**
    * This method will return the Activity ID and the launch file.
    *
-   * This must be in the tincan.xml file that is in the extracted package.
-   * You can find more information in the README.md file of this module.
+   * These information must be in the tincan.xml file that is in the extracted
+   *   package. You can find more information in the README.md file of this
+   *   module.
    *
    * @param object $file
    *   The file that was unzipped.
@@ -328,23 +329,23 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
     $tincan_file = $this->getExtractPath($file) .'tincan.xml';
 
     if (!file_exists( $this->getExtractPath($file) .'tincan.xml' ))
-      return false;
+      return FALSE;
 
     $xml = simplexml_load_file($tincan_file);
     if (!$xml)
-      return false;
+      return FALSE;
 
     // Check if the launch exists
     if (!isset($xml->activities->activity->launch))
-      return false;
+      return FALSE;
 
     // Check if the activity ID exists
     if (!isset($xml->activities->activity['id']))
-      return false;
+      return FALSE;
 
     return array(
       'launch' => (string) $xml->activities->activity->launch,
-      'id' => (string) $xml->activities->activity['id']
+      'id' => (string) $xml->activities->activity['id'],
     );
   }
 
