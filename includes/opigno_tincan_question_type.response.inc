@@ -107,7 +107,7 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
   public static function getRegistration($result_id) {
     // If we have the RID, try to get the registration from the DB.
     if (!empty($result_id)) {
-      $result = db_select(OpignoTincanQuestionTypeAnswersDatabase::dbName, 't')
+      $result = db_select(OpignoTincanQuestionTypeAnswersDatabase::NAME, 't')
         ->condition('rid', $result_id)
         ->fields('t')
         ->execute()->fetchAssoc();
@@ -168,7 +168,7 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
    *   If an error occurred while inserting to the database.
    */
   protected static function saveRegistration($registration, $result_id) {
-    db_insert(OpignoTincanQuestionTypeAnswersDatabase::dbName)
+    db_insert(OpignoTincanQuestionTypeAnswersDatabase::NAME)
       ->fields(array(
         'rid' => $result_id,
         'registration' => $registration,
@@ -190,7 +190,7 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
    *   The result ID linked to the registration to delete.
    */
   protected function deleteRegistration($result_id) {
-    db_delete(OpignoTincanQuestionTypeAnswersDatabase::dbName)
+    db_delete(OpignoTincanQuestionTypeAnswersDatabase::NAME)
       ->condition(array(
         'rid' => $result_id,
       ))

@@ -69,7 +69,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
     $activity_id = $package_info['id'];
     $launch_filename = $package_info['launch'];
 
-    db_merge(OpignoTincanQuestionTypePropertiesDatabase::dbName)
+    db_merge(OpignoTincanQuestionTypePropertiesDatabase::NAME)
       ->key(array('nid' => $this->node->nid, 'vid' => $this->node->vid))
       ->fields(array(
         'fid' => $_SESSION[self::SESSIONKEY_FILE],
@@ -93,7 +93,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
     }
 
     parent::getNodeProperties();
-    $result = db_select(OpignoTincanQuestionTypePropertiesDatabase::dbName, 't')
+    $result = db_select(OpignoTincanQuestionTypePropertiesDatabase::NAME, 't')
       ->condition('nid', $this->node->nid)
       ->condition('vid', $this->node->vid)
       ->fields('t')

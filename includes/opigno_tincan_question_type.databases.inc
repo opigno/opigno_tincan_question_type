@@ -3,24 +3,23 @@
 /**
  * @file
  * This file contains the classes corresponding to each database's table.
+ *
  * It contains these classes:
  * - OpignoTincanQuestionTypePropertiesDatabase
  * - OpignoTincanQuestionTypeAnswersDatabase
  */
 
-
 /**
- * This class provide the information about the question properties database's table.
+ * This class provide the information about the question properties table.
  */
-class OpignoTincanQuestionTypePropertiesDatabase
-{
-  const dbName = 'opigno_tincan_question_type_question_properties';
+class OpignoTincanQuestionTypePropertiesDatabase {
+  const NAME = 'opigno_tincan_question_type_question_properties';
 
   public static $fields = array(
     'nid' => array(
       'type' => 'int',
       'unsigned' => TRUE,
-      'not null' => TRUE
+      'not null' => TRUE,
     ),
     'vid' => array(
       'type' => 'int',
@@ -33,41 +32,39 @@ class OpignoTincanQuestionTypePropertiesDatabase
       'not null' => TRUE,
     ),
     'activity_id' => array(
-      'type' => 'text'
+      'type' => 'text',
     ),
     'launch_filename' => array(
-      'type' => 'text'
-    )
+      'type' => 'text',
+    ),
   );
 
   public static $indexes = array(
     'question_nid' => array('nid'),
-    'question_vid' => array('vid')
+    'question_vid' => array('vid'),
   );
 }
 
 
 /**
- * This class provide the information about the users's answer(s) database's
- *   table for the TinCan Question Type.
+ * This class provide the information about the user's answers table.
  */
-class OpignoTincanQuestionTypeAnswersDatabase
-{
-  const dbName = 'opigno_tincan_question_type_answers';
+class OpignoTincanQuestionTypeAnswersDatabase {
+  const NAME = 'opigno_tincan_question_type_answers';
 
   public static $fields = array(
     'rid' => array(
       'type' => 'int',
-      'unsigned' => true,
-      'not null' => true
+      'unsigned' => TRUE,
+      'not null' => TRUE,
     ),
     'registration' => array(
       'type' => 'text',
-      'not null' => true
-    )
+      'not null' => TRUE,
+    ),
   );
 
   public static $indexes = array(
-    'result_id' => array('rid')
+    'result_id' => array('rid'),
   );
 }
