@@ -5,7 +5,7 @@ class OpignoTincanQuestionTypePropertiesDatabase
 {
   const dbName = 'opigno_tincan_question_type_question_properties';
 
-  const fields = array(
+  public static $fields = array(
     'nid' => array(
       'type' => 'int',
       'unsigned' => TRUE,
@@ -29,7 +29,7 @@ class OpignoTincanQuestionTypePropertiesDatabase
     )
   );
 
-  const indexes = array(
+  public static $indexes = array(
     'question_nid' => array('nid'),
     'question_vid' => array('vid')
   );
@@ -39,7 +39,7 @@ class OpignoTincanQuestionTypeAnswersDatabase
 {
   const dbName = 'opigno_tincan_question_type_answers';
 
-  const fields = array(
+  public static $fields = array(
     'rid' => array(
       'type' => 'int',
       'unsigned' => true,
@@ -51,7 +51,7 @@ class OpignoTincanQuestionTypeAnswersDatabase
     )
   );
 
-  const indexes = array(
+  public static $indexes = array(
     'result_id' => array('rid')
   );
 }

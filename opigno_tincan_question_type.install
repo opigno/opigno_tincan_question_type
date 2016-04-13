@@ -18,12 +18,12 @@ function opigno_tincan_question_type_install()
 function opigno_tincan_question_type_schema() {
   return array(
     OpignoTincanQuestionTypePropertiesDatabase::dbName => array(
-      'fields' => OpignoTincanQuestionTypePropertiesDatabase::fields,
-      'indexes' => OpignoTincanQuestionTypePropertiesDatabase::indexes
+      'fields' => OpignoTincanQuestionTypePropertiesDatabase::$fields,
+      'indexes' => OpignoTincanQuestionTypePropertiesDatabase::$indexes
     ),
     OpignoTincanQuestionTypeAnswersDatabase::dbName => array(
-      'fields' => OpignoTincanQuestionTypeAnswersDatabase::fields,
-      'indexes' => OpignoTincanQuestionTypeAnswersDatabase::indexes
+      'fields' => OpignoTincanQuestionTypeAnswersDatabase::$fields,
+      'indexes' => OpignoTincanQuestionTypeAnswersDatabase::$indexes
     )
   );
 }
