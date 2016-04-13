@@ -326,9 +326,9 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
    *   An array('id', 'launch') if all the information are found, FALSE if not.
    */
   protected function getInfoFromExtractedPackage($file) {
-    $tincan_file = $this->getExtractPath($file) .'tincan.xml';
+    $tincan_file = $this->getExtractPath($file) . 'tincan.xml';
 
-    if (!file_exists( $this->getExtractPath($file) .'tincan.xml' )) {
+    if (!file_exists($this->getExtractPath($file) . 'tincan.xml')) {
       return FALSE;
     }
 
