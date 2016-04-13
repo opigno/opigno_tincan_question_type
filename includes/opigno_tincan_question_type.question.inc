@@ -328,20 +328,24 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
   protected function getInfoFromExtractedPackage($file) {
     $tincan_file = $this->getExtractPath($file) .'tincan.xml';
 
-    if (!file_exists( $this->getExtractPath($file) .'tincan.xml' ))
+    if (!file_exists( $this->getExtractPath($file) .'tincan.xml' )) {
       return FALSE;
+    }
 
     $xml = simplexml_load_file($tincan_file);
-    if (!$xml)
+    if (!$xml) {
       return FALSE;
+    }
 
     // Check if the launch exists.
-    if (isset($xml->activities->activity->launch) === FALSE)
+    if (!isset($xml->activities->activity->launch)) {
       return FALSE;
+    }
 
     // Check if the activity ID exists.
-    if (isset($xml->activities->activity['id']) === FALSE)
+    if (!isset($xml->activities->activity['id'])) {
       return FALSE;
+    }
 
     return array(
       'launch' => (string) $xml->activities->activity->launch,
