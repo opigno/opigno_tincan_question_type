@@ -33,7 +33,7 @@ function opigno_tincan_question_type_config() {
  * Implements hook_file_delete().
  */
 function opigno_tincan_question_type_file_delete($file) {
-  // Delete the extracted files that are in the extracted folder
+  // Delete the extracted files that are in the extracted folder.
   $len = strlen(OpignoTincanQuestionTypeQuestion::PATH_PUBLIC_PACKAGE_FOLDER);
   if (substr($file->uri, 0, $len) === OpignoTincanQuestionTypeQuestion::PATH_PUBLIC_PACKAGE_FOLDER) {
     file_unmanaged_delete_recursive(OpignoTincanQuestionTypeQuestion::getExtractPath($file));
