@@ -38,9 +38,16 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
    *   Indicate if the node is a new one or an update.
    */
   public function saveNodeProperties($is_new = FALSE) {
-    $is_file_updated = ($this->node->fid != $this->node->file);
-    if (!$is_new && !$is_file_updated) {
-      return;
+    // Check first if the file is a new one or an updated one.
+    // If the file didn't change, leave this method.
+    if (isset($this->node->fid)) {
+      $is_file_updated = ($this->node->fid != $this->node->file);
+      if (!$is_new && !$is_file_updated) {
+        return;
+      }
+    }
+    else {
+      $is_file_updated = FALSE;
     }
 
     if (!isset($_SESSION[self::SESSIONKEY_FILE])) {
