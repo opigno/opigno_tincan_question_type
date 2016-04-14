@@ -38,6 +38,11 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
    *   Indicate if the node is a new one or an update.
    */
   public function saveNodeProperties($is_new = FALSE) {
+    $is_file_updated = ($this->node->fid != $this->node->file);
+    if (!$is_new && !$is_file_updated) {
+      return;
+    }
+
     if (!isset($_SESSION[self::SESSIONKEY_FILE])) {
       form_set_error('file', t('Error while uploading the file.'));
       return;
@@ -49,7 +54,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
       return;
     }
 
-    $package_info = $this->getInfoFromExtractedPackage($file);
+    $package_info = self::getInfoFromExtractedPackage($file);
     if ($package_info === FALSE) {
       form_set_error(
         'file',
@@ -58,9 +63,14 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
       return;
     }
 
-    /*
-     * TODO: If is not new, remove old package after the update (first, use file_usage_delete())
-     */
+    // Delete the old file if there is a new one.
+    if ($is_file_updated) {
+      $old_file = file_load($this->node->fid);
+      if ($old_file) {
+        file_usage_delete($old_file, 'opigno_tincan_question_type', 'node', $this->node->nid);
+        file_delete($old_file);
+      }
+    }
 
     $file->status = FILE_STATUS_PERMANENT;
     file_save($file);
@@ -121,7 +131,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
 
     if ($file && $file->status != FILE_STATUS_PERMANENT) {
       if ($this->unzipPackage($file)) {
-        $package_info = $this->getInfoFromExtractedPackage($file);
+        $package_info = self::getInfoFromExtractedPackage($file);
         if ($package_info === FALSE) {
           form_set_error(
             'file',
@@ -186,18 +196,10 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
     }
 
     $file = file_load($this->nodeProperties['fid']);
-
-    $is_deleted = FALSE;
     if ($file) {
       file_usage_delete($file, 'opigno_tincan_question_type', 'node', $this->node->nid);
-      $is_deleted = file_delete($file);
+      file_delete($file);
     }
-
-    if ($is_deleted) {
-      file_unmanaged_delete_recursive($this->getExtractPath($file));
-    }
-
-    // TODO: check if it works even when we create multiple version of this question.
   }
 
   /**
@@ -321,7 +323,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
       return FALSE;
     }
     else {
-      $archiver->extract($this->getExtractPath($file));
+      $archiver->extract(self::getExtractPath($file));
       return TRUE;
     }
   }
@@ -339,10 +341,10 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
    * @return array|bool
    *   An array('id', 'launch') if all the information are found, FALSE if not.
    */
-  protected function getInfoFromExtractedPackage($file) {
-    $tincan_file = $this->getExtractPath($file) . 'tincan.xml';
+  public static function getInfoFromExtractedPackage($file) {
+    $tincan_file = self::getExtractPath($file) . 'tincan.xml';
 
-    if (!file_exists($this->getExtractPath($file) . 'tincan.xml')) {
+    if (!file_exists(self::getExtractPath($file) . 'tincan.xml')) {
       return FALSE;
     }
 
@@ -376,8 +378,8 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
    * @return string
    *   The path to the extracted package.
    */
-  protected function getExtractPath($file) {
-    $filename = $this->getPackageName($file);
+  public static function getExtractPath($file) {
+    $filename = self::getPackageName($file);
     return self::PATH_PUBLIC_EXTRACTED_PACKAGE_FOLDER . $filename . '/';
   }
 
@@ -390,7 +392,7 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
    * @return string
    *   The package name.
    */
-  protected function getPackageName($file) {
+  public static function getPackageName($file) {
     return pathinfo($file->uri, PATHINFO_FILENAME);
   }
 
