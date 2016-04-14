@@ -41,18 +41,18 @@ So, the statement should look, at least, like this:
 {
     "actor": {
         "objectType": "Agent",
-        "mbox_sha1sum": "2e13b73bf295005d5503223fa8ba56eb52707301",
+        "mbox_sha1sum": "3e13b53bf292605d5267223fa8ba78ec27402401",
         "name": "admin"
     },
     "verb": {
-        "id": "http://adlnet.gov/expapi/verbs/failed",
+        "id": "http://adlnet.gov/expapi/verbs/passed",
         "display": {
             "en-US": "failed"
         }
     },
     "object": {
         "objectType": "Activity",
-        "id": "http://id.tincanapi.com/activity/tincan-prototypes/golf-example"
+        "id": "http://example.com/my-activity-id"
     },
     "result": {
         "score": {
