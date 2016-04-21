@@ -21,13 +21,6 @@ function opigno_tincan_question_type_quiz_question_info() {
 }
 
 /**
- * Implements hook_config().
- */
-function opigno_tincan_question_type_config() {
-  return FALSE;
-}
-
-/**
  * Implements hook_file_delete().
  */
 function opigno_tincan_question_type_file_delete($file) {
