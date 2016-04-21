@@ -38,7 +38,7 @@ function opigno_tincan_question_type_help($path, $arg) {
   switch ($path) {
     case 'admin/help#opigno_tincan_question_type':
 
-      // --- ABOUT ---
+      // --- The ABOUT section.
       $output = '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Opigno TinCan Question Type module adds a new question type to the quiz module. With this new question type, you will be able to upload a TinCan Package and use it as a question for a quiz. More information can be found on the !module_page.',
           array(
@@ -46,7 +46,7 @@ function opigno_tincan_question_type_help($path, $arg) {
           )
         ) . '</p>';
 
-      // --- USES ---
+      // --- The USES section.
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
 
