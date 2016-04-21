@@ -1,7 +1,7 @@
 # Opigno TinCan Question Type
 ## Synopsis
 
-This module add a new question type for the [Quiz module](https://www.drupal.org/project/quiz).
+This module adds a new question type for the [Quiz module](https://www.drupal.org/project/quiz).
 With this new question type, you will be able to import TinCan Packages to your Drupal instance and to use it as a
 question.
 
