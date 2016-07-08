@@ -81,3 +81,9 @@ msgstr "Bitte konfigurieren Sie erst das Opigno TinCan API Modul."
 
 msgid "Go to !url"
 msgstr "Besuchen Sie !url"
+
+msgid "Please install the !tincanphp_library in the sites/all/library/TinCanPHP folder."
+msgstr "Bitte !tincanphp_library im Directory sites/all/library/TinCanPHP installieren"
+
+msgid "TinCanPHP library"
+msgstr "TinCanPhP Library"

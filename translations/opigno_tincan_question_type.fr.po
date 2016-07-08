@@ -81,3 +81,15 @@ msgstr "Veuillez d'abord configurer le module Opigno TinCan API."
 
 msgid "Go to !url"
 msgstr "Veuillez visiter !url"
+
+msgid "Please install the !tincanphp_library in the sites/all/library/TinCanPHP folder."
+msgstr "Veuillez installer la !tincanphp_library dans le répertoire sites/all/library/TinCanPHP."
+
+msgid "TinCanPHP library"
+msgstr "Librairie TinCanPHP"
+
+msgid "You will not be able to save this question."
+msgstr "Vous ne pourrez pas sauvegarder cette question."
+
+msgid "Impossible to create a new TinCan Package question type."
+msgstr "Impossible de créer un nouveau type de question Paquet TinCan."
