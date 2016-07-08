@@ -248,7 +248,7 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
     if (empty($endpoint) || empty($username) || empty($password)) {
       drupal_set_message(t('Please configure first the Opigno TinCan API module.'));
       if (drupal_valid_path('admin/opigno/system/tincan')) {
-        drupal_set_message(t('Go to !url', array('!url' => l(t('the settings page'), 'admin/opigno/system/tincan'))));
+        drupal_set_message(t('Go to !url', array('!url' => l(t('the settings page.'), 'admin/opigno/system/tincan'))));
       }
 
       return FALSE;

@@ -12,7 +12,7 @@ function opigno_tincan_question_type_quiz_question_info() {
   return array(
     'opigno_tincan_question_type' => array(
       'name' => t('TinCan Package'),
-      'description' => t('Quiz questions that allow a user to answer to a TinCan package.'),
+      'description' => t('Question type allowing to integrate a TinCan package inside a lesson.'),
       'question provider' => 'OpignoTincanQuestionTypeQuestion',
       'response provider' => 'OpignoTincanQuestionTypeResponse',
       'module' => 'quiz_question',
@@ -40,7 +40,7 @@ function opigno_tincan_question_type_help($path, $arg) {
 
       // --- The ABOUT section.
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Opigno TinCan Question Type module adds a new question type to the quiz module. With this new question type, you will be able to upload a TinCan Package and use it as a question for a quiz. More information can be found on the !module_page.',
+      $output .= '<p>' . t('The Opigno TinCan Question Type module adds a new question type to the quiz module. With this new question type, you will be able to upload a TinCan Package and use it as a question inside a lesson. More information can be found on the !module_page.',
           array(
             '!module_page' => l(t('module page'), 'https://www.drupal.org/sandbox/amermod/2705191'),
           )
@@ -57,8 +57,8 @@ function opigno_tincan_question_type_help($path, $arg) {
           )
         ) . '</dd>';
 
-      $output .= '<dt>' . t('Respond to a TinCan Question type') . '</dt>';
-      $output .= '<dd>' . t('To respond to a TinCan Question, you just have to start the quiz that contains the question previously created. The TinCan Package will appear in an iFrame.');
+      $output .= '<dt>' . t('Answer a TinCan Question') . '</dt>';
+      $output .= '<dd>' . t('To answer a TinCan Question, you just have to start the lesson that contains the question previously created. The TinCan Package will appear in an iFrame.');
 
       $output .= '<dt>' . t('Get the score') . '</dt>';
       $output .= '<dd>' . t('The score is taken directly from the LRS. The TinCan Package must provide the score in the way described in the README.md file or on the !module_page to the LRS. Then, this module will get the score back from the LRS and register it to this Opigno LMS instance.',
