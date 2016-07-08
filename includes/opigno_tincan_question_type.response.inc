@@ -190,9 +190,7 @@ class OpignoTincanQuestionTypeResponse extends QuizQuestionResponse {
    */
   protected function deleteRegistration($result_id) {
     db_delete(OpignoTincanQuestionTypeAnswersDatabase::NAME)
-      ->condition(array(
-        'rid' => $result_id,
-      ))
+      ->condition('rid', $result_id)
       ->execute();
   }
 
