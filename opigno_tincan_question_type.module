@@ -32,6 +32,39 @@ function opigno_tincan_question_type_file_delete($file) {
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function opigno_tincan_question_type_form_opigno_tincan_question_type_node_form_alter(&$form, &$form_state, $form_id) {
+  // Check if the TinCanPHP library is installed.
+  // If it is not installed, the user cannot access and an error message is given
+  $libraries = libraries_get_libraries();
+  if (!isset($libraries['TinCanPHP'])) {
+    drupal_set_message(t('You will not be able to save this question.'), 'error');
+    drupal_set_message(t(
+      'Please install the !tincanphp_library in the <em>sites/all/library/TinCanPHP</em> folder.',
+      array('!tincanphp_library' => l(t('TinCanPHP library'), 'https://github.com/RusticiSoftware/TinCanPHP/releases'))
+    ), 'error');
+  }
+
+  $form['#validate'][] = 'opigno_tincan_question_type_form_opigno_tincan_question_type_node_form_validate';
+}
+
+/**
+ * Function called when a form for type opigno_tincan_question_type is raised
+ */
+function opigno_tincan_question_type_form_opigno_tincan_question_type_node_form_validate(&$form, &$form_state) {
+  // Check if the TinCanPHP library is installed
+  $libraries = libraries_get_libraries();
+  if (!isset($libraries['TinCanPHP'])) {
+    form_set_error('', t('Impossible to create a new TinCan Package question type.'));
+    drupal_set_message(t(
+      'Please install the !tincanphp_library in the <em>sites/all/library/TinCanPHP</em> folder.',
+      array('!tincanphp_library' => l(t('TinCanPHP library'), 'https://github.com/RusticiSoftware/TinCanPHP/releases'))
+    ), 'error');
+  }
+}
+
+/**
  * Implements hook_help().
  */
 function opigno_tincan_question_type_help($path, $arg) {

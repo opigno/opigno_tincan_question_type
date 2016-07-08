@@ -240,6 +240,17 @@ class OpignoTincanQuestionTypeQuestion extends QuizQuestion {
 
     $launch_file = $this->nodeProperties['launch_filename'];
 
+    // Check first if the TinCanPHP library is installed
+    // If not, return nothing but an error message
+    $libraries = libraries_get_libraries();
+    if (!isset($libraries['TinCanPHP'])) {
+      drupal_set_message(t(
+        'Please install the !tincanphp_library in the <em>sites/all/library/TinCanPHP</em> folder.',
+        array('!tincanphp_library' => l(t('TinCanPHP library'), 'https://github.com/RusticiSoftware/TinCanPHP/releases'))
+      ), 'error');
+      return array();
+    }
+
     // Connect to the LRS.
     $lrs_endpoint = variable_get('opigno_tincan_api_endpoint', '');
     $lrs_username = variable_get('opigno_tincan_api_username', '');
